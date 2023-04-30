@@ -35,17 +35,6 @@ In both cases the files were randomly split into train, test and val sets. Any f
 
 ## Modeling Approaches:
 
-### Non - DL approach:
-I chose to implement this approach using SVM. The accuracy was very slightly better than the DL approach but the drawbacks fairly outweigh the positives. 
-![image](https://user-images.githubusercontent.com/110474064/234378330-3fbdfbc1-aacb-4f79-8993-e4fccddaf7c4.png)
-
-1. Since the entire data is loaded into memory for processing, I observed frequent kernel crashes even for a small amount of data.
-2. The data resolution had to be reduced if any calculations were to be made.
-3. If the data resolution was retained, the number of data points sent through the classifier had to be reduced. 
-4. The training was very slow as it was only using CPU.
-
-If this is to work, a more sophisticated data flow needs to be designed that would make use of GPU for parallelizable repeatable calcultaions.
-
 ### DL approach:
 Here I chose to use the Resnet 152 pretrained model, that would later be fine tuned using 2 separate datasets to generate 2 separate models.
 
@@ -62,6 +51,39 @@ Deepfake VS Facetune:
 This Model works very well with a high accuracy, which makes me believe that the model finds it easier differentiating between the 2 signatures of the deepfake vs facetune editing as opposed to the Real VS Edited usecase. 
 
 ![image](https://user-images.githubusercontent.com/110474064/234381970-ab87208a-e6a8-4f53-b4a7-bc2ce2adda27.png)![image](https://user-images.githubusercontent.com/110474064/234381999-b6da28b6-0ba4-4d3d-91d2-3d025df97081.png)
+
+## Deployment Details:
+
+### Simple web app:
+1. Dockerized image uploaded to Azure Container Registry
+2. Azure web app created using ACR image.
+3. App can be accessed here : https://editdetect.azurewebsites.net/? 
+
+### Kubernetes Deployment:
+1. Using Azure Kubernetes Service used to deploy and manage the same container based application.
+2. Self scaling with 2 nodes and a basic 2vCPU VM and 7GB RAM.
+3. Each pod uses 0.5 CPU and 2GB RAM
+4. AKS_generated_YAML.txt provides the YAML file that AKS generated when trying to deploy the app using a single-container image. This is a load balanced service : http://20.242.216.135:7000/ 
+
+### Load Testing :
+1. Python Locust library was used for testing with locustfile.py being the starting point.
+2. Configuration at run time and results for a heavy load (2000 users; 500 spawned in a second):
+![image](https://user-images.githubusercontent.com/110474064/235369485-a62bc1d0-9aa0-4c54-9b0d-9f69ec65f8ba.png)
+
+![image](https://user-images.githubusercontent.com/110474064/235369189-7392fdcb-1ca4-4eb2-b9e9-eadadd854c34.png)
+![image](https://user-images.githubusercontent.com/110474064/235369217-010d836f-20ad-407e-95e2-675b5fcbbddf.png)
+![image](https://user-images.githubusercontent.com/110474064/235369262-8e0c239d-5cba-432a-b8d6-5373edf3921a.png)
+![image](https://user-images.githubusercontent.com/110474064/235369288-b8dc48a0-9467-41f0-beb7-610580dbccbd.png)
+
+3. Configuration at run time and results for a heavy load (500 users; 100 spawned in a second):
+
+![image](https://user-images.githubusercontent.com/110474064/235369717-33b2a62d-2af2-4da0-a78c-21a87f6b53d7.png)
+![image](https://user-images.githubusercontent.com/110474064/235369785-211d2712-782c-40c5-beee-833b8868df45.png)
+![image](https://user-images.githubusercontent.com/110474064/235369811-885fd2ec-93d1-4613-a052-22e56d8ac036.png)
+![image](https://user-images.githubusercontent.com/110474064/235369828-c6223b07-7be4-46dc-b137-5ae1aa2e6e16.png)
+
+Our Inference:
+This is because of there being just 2 nodes and 3 pods created as part of the configuration of the kubernetes cluster. As soon as the number of users starts to climb past 1000, we start seeing failures with connection timeout errors. We also start seeing issues with multiple files being open, and this points directly to the app.py file which is the entry point for the app. Since the docker image is being spun on each pod, for a heavy traffic it is possible that there is an overlap
 
 ## User Guide: 
 
@@ -95,7 +117,6 @@ If you want to replicate this, use the above mentioned data sources and you can 
 
 3. Deployment ref - https://datasciencedojo.com/blog/web_app_for_gradio/
 
-4. https://github.com/AIPI540/AIPI540-Deep-Learning-Applications by Prof. Jon Reifschneider : for code reference
 
 
  
