@@ -84,7 +84,7 @@ This Model works very well with a high accuracy, which makes me believe that the
 ![image](https://user-images.githubusercontent.com/110474064/235369828-c6223b07-7be4-46dc-b137-5ae1aa2e6e16.png)
 
 ### Our take on the results:
-This is because of there being just 2 nodes and 3 pods created as part of the configuration of the kubernetes cluster. As soon as the number of users starts to climb past 1000, we start seeing failures with connection timeout errors. We also start seeing issues with multiple files being open, and this points directly to the app.py file which is the entry point for the app. Since the docker image is being spun on each pod, for a heavy traffic it is possible that there is an overlap
+This is because of there being just 2 nodes and 3 pods created as part of the configuration of the kubernetes cluster. As soon as the number of users starts to climb past 1000, we start seeing failures with connection timeout errors. For Heavy load ,we also start seeing "OS Error: Too many files open", and this points directly to the app.py file which is the entry point for the app. This indicates that our system had exceeded the maximum number of files that can be open simultaneously and is likely because a large number of network connections and open files were created, which caused the system to reach its limit.
 
 ## User Guide: 
 
