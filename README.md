@@ -118,6 +118,8 @@ If you want to replicate this, use the above mentioned data sources and you can 
 
 3. Deployment ref - https://datasciencedojo.com/blog/web_app_for_gradio/
 
+4. Azure Ref- https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
+
 
 
  
