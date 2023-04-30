@@ -1,0 +1,50 @@
+ - apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: default-1682835481163
+  spec:
+    finalizers:
+      - kubernetes
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: editingdetectapp
+    namespace: default-1682835481163
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: editingdetectapp
+    template:
+      metadata:
+        labels:
+          app: editingdetectapp
+      spec:
+        nodeSelector:
+          kubernetes.io/os: linux
+        containers:
+          - name: editingdetectapp
+            image: imgdetect.azurecr.io/demo-edit_detect_fin:latest
+            ports:
+              - containerPort: 7000
+            resources:
+              requests:
+                cpu: '0.5'
+                memory: '2'
+              limits:
+                cpu: '256'
+                memory: 11400G
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: editingdetectappservice
+    namespace: default-1682835481163
+  spec:
+    type: LoadBalancer
+    ports:
+      - targetPort: 7000
+        name: port
+        port: 7000
+        protocol: TCP
+    selector:
+      app: editingdetectapp
