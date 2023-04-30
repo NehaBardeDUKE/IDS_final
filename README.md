@@ -76,13 +76,14 @@ This Model works very well with a high accuracy, which makes me believe that the
 ![image](https://user-images.githubusercontent.com/110474064/235369288-b8dc48a0-9467-41f0-beb7-610580dbccbd.png)
 
 3. Configuration at run time and results for a heavy load (500 users; 100 spawned in a second):
+![image](https://user-images.githubusercontent.com/110474064/235370268-3d0217a0-2832-459c-a79e-1482e58a666f.png)
 
 ![image](https://user-images.githubusercontent.com/110474064/235369717-33b2a62d-2af2-4da0-a78c-21a87f6b53d7.png)
 ![image](https://user-images.githubusercontent.com/110474064/235369785-211d2712-782c-40c5-beee-833b8868df45.png)
 ![image](https://user-images.githubusercontent.com/110474064/235369811-885fd2ec-93d1-4613-a052-22e56d8ac036.png)
 ![image](https://user-images.githubusercontent.com/110474064/235369828-c6223b07-7be4-46dc-b137-5ae1aa2e6e16.png)
 
-Our Inference:
+### Our take on the results:
 This is because of there being just 2 nodes and 3 pods created as part of the configuration of the kubernetes cluster. As soon as the number of users starts to climb past 1000, we start seeing failures with connection timeout errors. We also start seeing issues with multiple files being open, and this points directly to the app.py file which is the entry point for the app. Since the docker image is being spun on each pod, for a heavy traffic it is possible that there is an overlap
 
 ## User Guide: 
