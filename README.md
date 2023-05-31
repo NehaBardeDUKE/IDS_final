@@ -1,6 +1,5 @@
 # Detection of Edited Images
 
-## Team: Neha Barde (neha.barde@duke.edu) ; Iqra Imtiaz(iqra.imtiaz@duke.edu)
 
 The goal of this project is to create a web application that can distinguish between real and edited images. For the edited images it needs to further differentiate between the image being a deepfake or it being manipulated using facetune.
 
